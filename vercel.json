@@ -1,0 +1,38 @@
+{
+  "functions": {
+    "api/journal.js": {
+      "includeFiles": "src/{journal,signin}.html"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/archive",
+      "destination": "/api/journal?route=archive"
+    },
+    {
+      "source": "/auth/options",
+      "destination": "/api/journal?route=options"
+    },
+    {
+      "source": "/auth/verify",
+      "destination": "/api/journal?route=verify"
+    },
+    {
+      "source": "/owner",
+      "destination": "/api/journal?route=owner"
+    },
+    {
+      "source": "/logout",
+      "destination": "/api/journal?route=logout"
+    },
+    {
+      "source": "/login",
+      "destination": "/api/journal?route=home"
+    },
+    {
+      "source": "/",
+      "destination": "/api/journal?route=home"
+    }
+  ],
+  "buildCommand": "node src/build-vercel.mjs"
+}

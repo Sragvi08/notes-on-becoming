@@ -1,0 +1,1 @@
+{"name":"notes-on-becoming","private":true,"type":"module","dependencies":{"@simplewebauthn/browser":"13.3.0","@simplewebauthn/server":"13.3.3","@vercel/blob":"latest","iron-session":"^8.0.4"},"scripts":{"test":"node --experimental-test-module-mocks --test test/*.mjs","build":"node src/build-vercel.mjs"}}

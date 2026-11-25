@@ -1,0 +1,15 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Notes on Becoming · Kindling Curiosity</title>
+<style>*{box-sizing:border-box}body{margin:0;min-height:100svh;display:grid;place-items:center;background:#f5f0e5;color:#302d29;font:17px/1.55 Georgia,serif}main{width:min(92%,460px);margin:24px auto;padding:34px clamp(19px,5vw,43px);background:#fcf8ec;border:1px solid #cec4ae;border-top:7px solid #567b81;border-radius:6px;box-shadow:4px 9px 30px #4c423726}h1{font-weight:normal;letter-spacing:-.05em;font-size:clamp(29px,7vw,41px);line-height:1.1;margin:0}i{color:#726447}button,input{font:inherit;width:100%;padding:10px;border-radius:4px}input{border:1px solid #b9b19f;background:#fffdf8;margin:4px 0 12px}button{border:1px solid #426467;background:#426467;color:white;cursor:pointer}button:disabled{opacity:.55}details{border-top:1px solid #d4cbb9;margin-top:20px;padding-top:14px}summary{cursor:pointer;color:#355b5d}small{display:block;margin:12px 0;color:#655e54}#status{color:#813f31}label{display:block}</style>
+<main><h1>Notes on Becoming</h1><i>Kindling Curiosity</i><p>Open your private notebook with a passkey.</p><button id="enter">Sign in with a passkey</button>
+<details><summary>Create your own journal</summary><form id="join"><p>Your notes, habits, and reflections belong to your account.</p><label>Name for your passkey<input required maxlength="60" id="name" autocomplete="nickname" placeholder="Your name"></label><button>Create journal</button><small>Save your passkey in a synced password manager to open your journal on other devices. Losing your only passkey can lock you out.</small></form></details><p id="status" role="status"></p></main>
+<script>/*PASSKEY_SDK*/</script><script>
+async function post(action,body){const response=await fetch('/auth/'+action,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const json=await response.json();if(!response.ok)throw Error(json.error||'Please try again.');return json}
+async function auth(kind){const message=document.querySelector('#status'),buttons=document.querySelectorAll('button');buttons.forEach(b=>b.disabled=true);try{
+if(!window.PublicKeyCredential)throw Error('Open this page in a browser with passkey support.');
+message.textContent='Waiting for your device…';
+const optionsJSON=await post('options',{kind,name:document.querySelector('#name').value});
+const response=kind==='register'?await SimpleWebAuthnBrowser.startRegistration({optionsJSON}):await SimpleWebAuthnBrowser.startAuthentication({optionsJSON});
+await post('verify',{response});location.assign('/');
+}catch(e){message.textContent=e.name==='NotAllowedError'?'The passkey prompt was closed or no matching passkey was available. You can try again.':e.message}finally{buttons.forEach(b=>b.disabled=false)}}
+document.querySelector('#enter').onclick=()=>auth('signin');document.querySelector('#join').onsubmit=e=>{e.preventDefault();auth('register')};
+</script></html>
